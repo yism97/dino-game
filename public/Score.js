@@ -1,5 +1,6 @@
 import { sendEvent } from './Socket.js';
-import stages from '../assets/stage.json' with { type: 'json' };
+import stages from './assets/stage.json' with { type: 'json' };
+import items from './assets/item.json' with { type: 'json' };
 
 class Score {
   score = 0;
@@ -50,12 +51,22 @@ class Score {
   }
 
   getItem(itemId) {
-    // 아이템 획득시 점수 변화
-    this.score += 0;
+    // 현재 점수에 아이템 획득 점수 추가
+    const itemIndex = items.data.findIndex((e) => e.id === itemId);
+    this.score += items.data[itemIndex].score;
+
+    // 아이템 획득 시 서버에 메시지 전송
+    sendEvent(21, {
+      itemId,
+      score: items.data[itemIndex].score,
+      stageId: this.currentStageId,
+      timestamp: Date.now(),
+    });
   }
 
   reset() {
     this.score = 0;
+    this.stageLevel = 0;
   }
 
   setHighScore() {
@@ -70,7 +81,7 @@ class Score {
   }
 
   draw() {
-    const nowStage = this.stageLevel + 1;
+    const nowStage = this.stageLevel;
     const highScore = Number(localStorage.getItem(this.HIGH_SCORE_KEY));
     const y = 20 * this.scaleRatio;
 

@@ -3,6 +3,7 @@ import Ground from './Ground.js';
 import CactiController from './CactiController.js';
 import Score from './Score.js';
 import ItemController from './ItemController.js';
+import './Socket.js';
 import { sendEvent } from './Socket.js';
 
 const canvas = document.getElementById('game');
@@ -40,6 +41,8 @@ const ITEM_CONFIG = [
   { width: 50 / 1.5, height: 50 / 1.5, id: 2, image: 'images/items/pokeball_yellow.png' },
   { width: 50 / 1.5, height: 50 / 1.5, id: 3, image: 'images/items/pokeball_purple.png' },
   { width: 50 / 1.5, height: 50 / 1.5, id: 4, image: 'images/items/pokeball_cyan.png' },
+  { width: 50 / 1.5, height: 50 / 1.5, id: 5, image: 'images/items/pokeball_orange.png' },
+  { width: 50 / 1.5, height: 50 / 1.5, id: 6, image: 'images/items/pokeball_pink.png' },
 ];
 
 // 게임 요소들
@@ -164,7 +167,6 @@ function reset() {
   cactiController.reset();
   score.reset();
   gameSpeed = GAME_SPEED_START;
-  setCurrentStage(1);
   sendEvent(2, { timestamp: Date.now() });
 }
 
@@ -203,15 +205,23 @@ function gameLoop(currentTime) {
     ground.update(gameSpeed, deltaTime);
     // 선인장
     cactiController.update(gameSpeed, deltaTime);
-    itemController.update(gameSpeed, deltaTime);
+
+    const stageIndex = score.getStageLevel();
+
+    // 아이템
+    itemController.update(gameSpeed, deltaTime, stageIndex);
+
     // 달리기
     player.update(gameSpeed, deltaTime);
     updateGameSpeed(deltaTime);
 
+    // 게임 중일 때 점수 변경
     score.update(deltaTime);
   }
 
+  // 게임 종료
   if (!gameover && cactiController.collideWith(player)) {
+    console.log('game over');
     gameover = true;
     score.setHighScore();
     setupGameReset();

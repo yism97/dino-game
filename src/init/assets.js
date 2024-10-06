@@ -7,7 +7,7 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const basePath = path.join(__dirname, '../../public/assets'); // 우리 폴더의 위치, 최상위 경로+ assets 폴더
-let gameAssets = {};
+let gameAssets = {}; //전역변수 여기에 json파일값을 받아온다
 
 // 파일 읽는 함수
 // 파일은 비동기 병렬로 읽는다.
