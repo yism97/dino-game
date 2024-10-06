@@ -6,7 +6,7 @@ import { fileURLToPath } from 'url';
 // fileURLToPath는 URL 문자열을 파일 시스템의 경로로 변환
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const basePath = path.join(__dirname, '../../assets'); // 우리 폴더의 위치, 최상위 경로+ assets 폴더
+const basePath = path.join(__dirname, '../../public/assets'); // 우리 폴더의 위치, 최상위 경로+ assets 폴더
 let gameAssets = {};
 
 // 파일 읽는 함수
