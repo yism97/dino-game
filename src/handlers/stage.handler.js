@@ -28,13 +28,17 @@ export const moveStageHandler = (userId, payload) => {
   //   return { status: 'fail', message: 'Invalid elapsed time' };
   // }
 
-  // 게임 에셋에서 다음 스테이지의 존재 여부 확인
   const { stages } = getGameAssets();
+  // 현재 스테이지의 존재 여부 확인
+  if (!stages.data.some((stage) => stage.id === payload.currentStage)) {
+    return { status: 'fail', message: 'current stage does not exist' };
+  }
+  // 다음 스테이지의 존재 여부 확인
   if (!stages.data.some((stage) => stage.id === payload.targetStage)) {
     return { status: 'fail', message: 'Target stage does not exist' };
   }
 
   // 유저의 다음 스테이지 정보 업데이트 + 현재 시간
   setStage(userId, payload.targetStage, serverTime);
-  return { status: 'success' };
+  return { status: 'success', message: '스테이지 변동 성공!', handler: 11 };
 };

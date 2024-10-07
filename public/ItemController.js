@@ -3,7 +3,7 @@ import item_unlock from './assets/item_unlock.json' with { type: 'json' };
 import items from './assets/item.json' with { type: 'json' };
 
 class ItemController {
-  INTERVAL_MIN = 1000;
+  INTERVAL_MIN = 0;
   INTERVAL_MAX = 5000;
 
   nextInterval = null;
@@ -34,9 +34,6 @@ class ItemController {
     const index = this.getRandomNumber(0, itemId.length - 1);
     // index의 item_id의 값 할당
     const itemInfo = this.itemImages[itemId[index] - 1];
-
-    // 아이템 id 및 이미지 내용 출력
-    console.log(itemInfo.image);
 
     const x = this.canvas.width * 1.5;
     const y = this.getRandomNumber(10, this.canvas.height - itemInfo.height);
@@ -79,8 +76,16 @@ class ItemController {
     const collidedItem = this.items.find((item) => item.collideWith(sprite));
     if (collidedItem) {
       this.ctx.clearRect(collidedItem.x, collidedItem.y, collidedItem.width, collidedItem.height);
+
+      // 아이템 획득 시 해당 아이템의 점수 출력
+      const itemIndex = items.data.findIndex((e) => e.id === collidedItem.id);
+      const itemScore = items.data[itemIndex].score;
+
+      // 아이템 점수 표시
+      console.log(`아이템 획득 점수: ${itemScore}`);
       return {
         itemId: collidedItem.id,
+        score: itemScore,
       };
     }
   }
